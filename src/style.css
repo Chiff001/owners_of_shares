@@ -1,0 +1,42 @@
+* {
+    border-radius: 0px;
+}
+
+.navbar {
+    background-image:url(https://loip.ru/bitrix/templates/main/img/header.jpg);
+}
+
+.btn {
+    --bs-border-radius: 0px;
+    --bs-btn-bg: #0072BC;
+    --bs-btn-hover-bg: #0f466b;
+    background-color: #0072BC;
+}
+
+.btn-primary {
+    --bs-border-radius: 0px;
+    --bs-btn-bg: #0072BC;
+    --bs-btn-hover-bg: #0f466b;
+    background-color: #0072BC;
+}
+
+a {
+    --bs-link-color-rgb: #0072BC;
+}
+
+.card {
+    --bs-border-radius: 0px
+}
+
+.form-control {
+    --bs-border-radius: 0px;
+}
+
+.price {
+    color: #e74c3c;
+}
+
+* {
+--bs-btn-bg: #0072BC;
+--bs-btn-hover-bg: #0f466b;
+}
