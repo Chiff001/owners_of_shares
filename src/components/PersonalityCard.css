@@ -1,0 +1,14 @@
+.mycard {
+    border: 1px solid #D9D9D9;
+    border-radius: 0%;
+}
+
+.loadingBg {
+    z-index: 999;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
