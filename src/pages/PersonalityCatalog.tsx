@@ -10,19 +10,21 @@ import { useNavigate } from "react-router-dom";
 import { BreadCrumbs } from "../components/BreadCrumbs";
 import { PERSONALITIES_MOCK } from "../modules/mock";
 
+import { useDispatch, useSelector } from 'react-redux';
+import { setSearchValue } from "../slices/PersonalitySlice";
+
 const PersonalityCatalog: FC = () => {
-    const [searchValue, setSearchValue] = useState('')
+    const dispatch = useDispatch();
+    const searchValue = useSelector((state: any) => state.search.searchValue);
     const [loading, setLoading] = useState(false)
     const [catalog, setCatalog] = useState<PersonalityResult>()
-    const [[application_id, application_count], setApplication] = useState([-1, 0])
-
     const navigate = useNavigate();
 
     const handleSearch = async () => {
         setLoading(true)
         getPersonalityByName(searchValue)
         .then((response) => setCatalog(response))
-        .catch(() => { // В случае ошибки используем mock данные, фильтруем по имени
+        .catch(() => { // В случае ошибки используем mock данные
             setCatalog(
                 PERSONALITIES_MOCK
             )})
@@ -34,16 +36,11 @@ const PersonalityCatalog: FC = () => {
         navigate(`${ROUTES.PERSONALITIES}/${id}`);
     };
 
-    const handleAddToApplication = async (id: number) => {
-        await addToApplication(id);
-        await handleSearch();
-    }
-
     useEffect(() => {
         setLoading(true)
         getPersonalityByName(searchValue)
         .then((response) => setCatalog(response))
-        .catch(() => { // В случае ошибки используем mock данные, фильтруем по имени
+        .catch(() => { // В случае ошибки используем mock данные
             setCatalog(
                 PERSONALITIES_MOCK
             )})
@@ -57,7 +54,7 @@ const PersonalityCatalog: FC = () => {
 
             <InputField
                 value={searchValue}
-                setValue={(value) => setSearchValue(value)}
+                setValue={(value) => dispatch(setSearchValue(value))}
                 loading={loading}
                 onSubmit={handleSearch}
             />
@@ -73,12 +70,11 @@ const PersonalityCatalog: FC = () => {
                         <h1>К сожалению, пока ничего не найдено :(</h1>
                     </div>
                 ) : (
-                    <Row xs={4} md={4} className="g-4">
+                    <Row xs={1} sm={2} md={3} lg={4} className="g-4">
                         {catalog.personalities.map((item, index) => (
                             <Col key={index}>
                                 <PersonalityCard
                                     imageClickHandler={() => handleCardClick(item.id)}
-                                    addToApplication={() => handleAddToApplication(item.id)}
                                     {...item}
                                 />
                             </Col>
