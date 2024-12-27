@@ -96,7 +96,7 @@ const CompanysTable = ({companys}:Props) => {
                 Header: "Действие",
                 accessor: "decline_button",
                 Cell: ({ cell }) => (
-                    cell.row.values.status == E_CompanyStatus.InWork && <Button color="danger" onClick={() => handleRejectCompany(cell.row.values.id)}>Отклонить</Button>
+                    cell.row.values.status == E_CompanyStatus.InWork && <Button color="primary" onClick={() => handleRejectCompany(cell.row.values.id)}>Отклонить</Button>
                 )
             }
         )
