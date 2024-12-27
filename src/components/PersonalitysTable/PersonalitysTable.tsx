@@ -55,7 +55,7 @@ const PersonalitysTable = ({personalitys}:Props) => {
                 Header: "Удалить",
                 accessor: "delete_button",
                 Cell: ({ cell }) => (
-                    <Button color="danger" onClick={() => handleDeletePersonality(cell.row.values.id)}>Удалить</Button>
+                    <Button color="primary" onClick={() => handleDeletePersonality(cell.row.values.id)}>Удалить</Button>
                 )
             }
         ],
