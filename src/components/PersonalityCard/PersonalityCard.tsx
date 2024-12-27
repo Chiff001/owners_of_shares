@@ -79,7 +79,7 @@ const PersonalityCard = ({personality, showAddBtn=false, showRemoveBtn=false, ed
                                     </Button>
                                 </Link>
                                 {showRemoveBtn &&
-                                    <Button color="danger" onClick={handleRemoveFromDraftCompany}>
+                                    <Button color="primary" onClick={handleRemoveFromDraftCompany}>
                                         Удалить
                                     </Button>
                                 }
