@@ -86,7 +86,7 @@ const PersonalityAddPage = () => {
                     <CustomDropdown label="Тип лица" options={typeOptions} selectedItem={type} setSelectedItem={setType} className="d-flex flex-column mb-3"/>
                     <CustomInput label="Код лица" placeholder="Введите код" value={number} setValue={setNumber}/>
                     <Col className="d-flex justify-content-center gap-5 mt-5">
-                        <Button color="success" className="fs-4" onClick={handleCreatePersonality}>Создать</Button>
+                        <Button color="primary" className="fs-4" onClick={handleCreatePersonality}>Создать</Button>
                     </Col>
                 </Col>
             </Row>
