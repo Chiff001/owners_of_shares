@@ -104,9 +104,9 @@ const CompanyPage = () => {
             {isDraft && !is_superuser &&
                 <Row className="mt-5">
                     <Col className="d-flex gap-5 justify-content-center">
-                        <Button color="success" className="fs-4" onClick={saveCompany}>Сохранить</Button>
+                        <Button color="primary" className="fs-4" onClick={saveCompany}>Сохранить</Button>
                         <Button color="primary" className="fs-4" type="submit">Отправить</Button>
-                        <Button color="danger" className="fs-4" onClick={deleteCompany}>Удалить</Button>
+                        <Button color="primary" className="fs-4" onClick={deleteCompany}>Удалить</Button>
                     </Col>
                 </Row>
             }
