@@ -2,7 +2,7 @@ import {useNavigate} from "react-router-dom";
 import {useMemo} from "react";
 import {Button} from "reactstrap";
 import {T_Personality} from "modules/types.ts";
-import CustomTable from "components/CustomTable/CustomTable.tsx";
+import CustomTablePer from "components/CustomTable/CustomTablePer.tsx";
 import {deletePersonality} from "store/slices/personalitysSlice.ts";
 import {useAppDispatch} from "store/store.ts";
 
@@ -69,7 +69,7 @@ const PersonalitysTable = ({personalitys}:Props) => {
     }
 
     return (
-        <CustomTable columns={columns} data={personalitys} onClick={handleClick} />
+        <CustomTablePer columns={columns} data={personalitys} onClick={handleClick} />
     )
 };
 
