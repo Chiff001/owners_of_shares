@@ -17,3 +17,5 @@ lr6 = https://github.com/Chiff001/owners_of_shares/tree/gh-pages Github Pages
 lr7 = https://github.com/Chiff001/owners_of_shares/tree/redux-toolkit Redux-toolkit
 
 lr8 = https://github.com/Chiff001/owners_of_shares/tree/moderator-interface Moderator-interface
+
+Мобильное приложение = https://github.com/Chiff001/mobile
