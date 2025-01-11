@@ -1,103 +1,120 @@
-import { useTable } from "react-table";
-import React from "react";
-import { Table } from "reactstrap";
+import {useNavigate} from "react-router-dom";
+import {useMemo} from "react";
+import {formatDate} from "src/utils/utils.ts";
+import CustomTable from "components/CustomTable/CustomTable.tsx";
+import {useAppDispatch, useAppSelector} from "store/store.ts";
+import {Button} from "reactstrap";
+import {Company} from "src/api/Api.ts";
+import {acceptCompany, fetchCompanys, rejectCompany} from "store/slices/companysSlice.ts";
+import {E_CompanyStatus} from "modules/types.ts";
+import {ACCREDITATION_DICT} from "modules/consts.ts";
+import CustomPagination from "components/CustomPagination/CustomPagination.tsx";
 
-const CustomTable = ({ columns, data, page, onClick }) => {
-    const {
-        headerGroups,
-        rows,
-        prepareRow,
-    } = useTable({
-        columns,
-        data
-    });
+type Props = {
+    companys:Company[]
+    page: number
+    setPage: (page:number) => void
+    pageCount: number
+    refetch: () => void
+}
 
-    const onTdClicked = (row, e) => {
-        if (e.target.tagName !== "BUTTON") {
-            onClick(row.values.id);
-        }
-    };
+const CompanysTable = ({companys, page, setPage, pageCount, refetch}:Props) => {
+
+    const {is_superuser} = useAppSelector((state) => state.user)
+
+    const navigate = useNavigate()
+
+    const dispatch = useAppDispatch()
+
+    const handleClick = (company_id) => {
+        navigate(`/companys/${company_id}`)
+    }
+
+    const handleAcceptCompany = async (company_id) => {
+        await dispatch(acceptCompany(company_id))
+        await dispatch(fetchCompanys())
+        refetch()
+    }
+
+    const handleRejectCompany = async (company_id) => {
+        await dispatch(rejectCompany(company_id))
+        await dispatch(fetchCompanys())
+        refetch()
+    }
+
+    const STATUSES = {
+        1: "Черновик",
+        2: "В работе",
+        3: "Завершен",
+        4: "Отменён",
+        5: "Удалён"
+    }
+
+    const columns = useMemo(
+        () => [
+            {
+                Header: '№',
+                accessor: 'id',
+            },
+            {
+                Header: 'Статус',
+                accessor: 'status',
+                Cell: ({ value }) => STATUSES[value]
+            },
+            {
+                Header: 'Аккредитация',
+                accessor: 'accreditation',
+                Cell: ({ value }) => ACCREDITATION_DICT[value]
+            },
+            {
+                Header: 'Дата создания',
+                accessor: 'date_created',
+                Cell: ({ value }) => formatDate(value)
+            },
+            {
+                Header: 'Дата формирования',
+                accessor: 'date_formation',
+                Cell: ({ value }) => formatDate(value)
+            },
+            {
+                Header: 'Дата завершения',
+                accessor: 'date_complete',
+                Cell: ({ value }) => formatDate(value)
+            }
+        ],
+        []
+    )
+
+    if (is_superuser) {
+        columns.push(
+            {
+                Header: "Пользователь",
+                accessor: "owner",
+                Cell: ({ value }) => value
+            },
+            {
+                Header: "Действие",
+                accessor: "accept_button",
+                Cell: ({ cell }) => (
+                    cell.row.values.status == E_CompanyStatus.InWork && <Button color="primary" onClick={() => handleAcceptCompany(cell.row.values.id)}>Принять</Button>
+                )
+            },
+            {
+                Header: "Действие",
+                accessor: "decline_button",
+                Cell: ({ cell }) => (
+                    cell.row.values.status == E_CompanyStatus.InWork && <Button color="primary" onClick={() => handleRejectCompany(cell.row.values.id)}>Отклонить</Button>
+                )
+            }
+        )
+    }
 
     return (
-        <div>
-            {/* Заголовки таблицы (горизонтально) */}
-            <div style={{
-                display: "flex",
-                marginBottom: "8px",
-                backgroundColor: "#f4f4f4",
-                padding: "8px",
-                borderBottom: "2px solid #ddd",
-            }}>
-                {headerGroups.map(headerGroup => (
-                    headerGroup.headers.map((column, index) => (
-                        <div
-                            {...column.getHeaderProps()}
-                            key={column.getHeaderProps().key}
-                            style={{
-                                flex: index === 0 ? 0.2 : [1].includes(index) ? 1.05 : [3, 5].includes(index) ? 1.4 : 1, // Первый столбец - 0.2, 4, 5, 6 - 1.4
-                                fontWeight: "bold",
-                                padding: "8px",
-                                textAlign: "center",  // Выравнивание заголовков по центру
-                                borderRight: "1px solid #ddd", // Разделитель между заголовками
-                                whiteSpace: "nowrap",
-                            }}
-                        >
-                            {column.render('Header')}
-                        </div>
-                    ))
-                ))}
-            </div>
-
-            {/* Данные строк (горизонтально) */}
-            {rows.map((row, i) => {
-                prepareRow(row);
-                return (
-                    <div
-                        {...row.getRowProps()}
-                        key={row.getRowProps().key}
-                        onClick={(e) => onTdClicked(row, e)}
-                        style={{
-                            display: "flex",
-                            marginBottom: "8px",
-                            border: "1px solid #ddd",
-                            borderRadius: "8px",
-                            padding: "8px",
-                            cursor: "pointer",
-                            alignItems: "center",
-                        }}
-                    >
-                        {row.cells.map((cell, index) => {
-                            let cellStyle = {
-                                flex: 1,
-                                padding: "8px",
-                                textOverflow: "ellipsis",
-                                overflow: "hidden",
-                                whiteSpace: "nowrap",
-                                borderRight: "1px solid #ddd", // Разделитель между ячейками
-                            };
-
-                            // Устанавливаем ширину столбцов
-                            if (index === 0) {
-                                cellStyle = { ...cellStyle, flex: 0.2 };  // Первый столбец (уже)
-                            } else if ([3, 4, 5].includes(index)) {
-                                cellStyle = { ...cellStyle, flex: 1.2 };  // 4, 5 и 6 столбцы (шире)
-                            }
-
-                            return (
-                                <div
-                                    {...cell.getCellProps()}
-                                    key={cell.getCellProps().key}
-                                    style={cellStyle}
-                                >
-                                    {cell.column.id === 'id' ? i + 1 + (page - 1) * 10 : cell.render('Cell')}
-                                </div>
-                            );
-                        })}
-                    </div>
-                );
-            })}
-        </div>
-    );
+        <>
+            <CustomTable columns={columns} data={companys} page={page} onClick={handleClick}/>
+            <CustomPagination page={page} pageCount={pageCount} setPage={setPage} />
+        </>
+    )
 };
 
-export default CustomTable;
+export default CompanysTable
