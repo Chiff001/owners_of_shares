@@ -8,12 +8,17 @@ import {Company} from "src/api/Api.ts";
 import {acceptCompany, fetchCompanys, rejectCompany} from "store/slices/companysSlice.ts";
 import {E_CompanyStatus} from "modules/types.ts";
 import {ACCREDITATION_DICT} from "modules/consts.ts";
+import CustomPagination from "components/CustomPagination/CustomPagination.tsx";
 
 type Props = {
     companys:Company[]
+    page: number
+    setPage: (page:number) => void
+    pageCount: number
+    refetch: () => void
 }
 
-const CompanysTable = ({companys}:Props) => {
+const CompanysTable = ({companys, page, setPage, pageCount, refetch}:Props) => {
 
     const {is_superuser} = useAppSelector((state) => state.user)
 
@@ -28,11 +33,13 @@ const CompanysTable = ({companys}:Props) => {
     const handleAcceptCompany = async (company_id) => {
         await dispatch(acceptCompany(company_id))
         await dispatch(fetchCompanys())
+        refetch()
     }
 
     const handleRejectCompany = async (company_id) => {
         await dispatch(rejectCompany(company_id))
         await dispatch(fetchCompanys())
+        refetch()
     }
 
     const STATUSES = {
@@ -103,7 +110,10 @@ const CompanysTable = ({companys}:Props) => {
     }
 
     return (
-        <CustomTable columns={columns} data={companys} onClick={handleClick}/>
+        <>
+            <CustomTable columns={columns} data={companys} onClick={handleClick}/>
+            <CustomPagination page={page} pageCount={pageCount} setPage={setPage} />
+        </>
     )
 };
 
